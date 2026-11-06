@@ -34,6 +34,16 @@ public class WebController {
     // Thư mục lưu trữ file ảnh upload nằm ở thư mục gốc project
     private static final String UPLOAD_DIR = "uploads/";
 
+    // --- ĐIỀU HƯỚNG TRANG CHỦ ---
+    @GetMapping("/")
+    public String home(HttpSession session) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser != null) {
+            return "redirect:/collection";
+        }
+        return "redirect:/login";
+    }
+
     // --- HIỂN THỊ CÁC TRANG AUTH ---
     @GetMapping("/register")
     public String showRegistrationPage() {

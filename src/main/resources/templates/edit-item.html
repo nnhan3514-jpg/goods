@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh sửa Goods</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; margin: 0; padding: 30px; box-sizing: border-box; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 650px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        h2 { color: #2c3e50; margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid #f1f2f6; padding-bottom: 10px; }
+        .form-group { margin-bottom: 20px; }
+        .form-row { display: flex; gap: 15px; }
+        .form-row .form-group { flex: 1; }
+        label { display: block; margin-bottom: 8px; color: #555; font-weight: 600; font-size: 14px; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        input:focus, select:focus { border-color: #4CAF50; outline: none; box-shadow: 0 0 5px rgba(76, 175, 80, 0.2); }
+        .btn-container { display: flex; gap: 12px; margin-top: 25px; }
+        button, .btn-cancel { flex: 1; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; text-align: center; text-decoration: none; }
+        button { background-color: #4CAF50; color: white; }
+        button:hover { background-color: #45a049; }
+        .btn-cancel { background-color: #6c757d; color: white; display: inline-block; box-sizing: border-box; }
+        .btn-cancel:hover { background-color: #5a6268; }
+        .current-img-preview { margin-top: 10px; width: 80px; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; display: block; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Chỉnh sửa thông tin Goods</h2>
+
+    <!-- Form cập nhật (bắt buộc có enctype để nhận file upload) -->
+    <form action="#" th:action="@{/collection/update/{id}(id=${item.id})}" th:object="${item}" method="post" enctype="multipart/form-data">
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name">Chủ đề Goods:</label>
+                <input type="text" id="name" th:field="*{name}" required />
+            </div>
+            <div class="form-group">
+                <label for="characterName">Tên nhân vật:</label>
+                <input type="text" id="characterName" th:field="*{characterName}" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="category">Loại Goods:</label>
+                <input type="text" id="category" th:field="*{category}" />
+            </div>
+            <div class="form-group">
+                <label for="status">Trạng thái:</label>
+                <select id="status" th:field="*{status}">
+                    <option value="Đã có">Đã có</option>
+                    <option value="Pre-order">Pre-order</option>
+                    <option value="Đang tìm">Đang tìm</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="imageFile">🖼️ Thay đổi ảnh minh họa Goods (Tải từ máy):</label>
+            <input type="file" id="imageFile" name="imageFile" accept="image/*" />
+            <!-- Hiển thị ảnh cũ hiện tại nếu có -->
+            <div th:if="${item.imageUrl != null and item.imageUrl != ''}" style="margin-top: 8px;">
+                <span style="font-size: 12px; color: #666;">Ảnh hiện tại:</span>
+                <img th:src="${item.imageUrl}" class="current-img-preview" alt="Current Image" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="shopLink">🔗 Link Shop / Bài viết:</label>
+            <input type="text" id="shopLink" th:field="*{shopLink}" />
+        </div>
+
+        <div class="btn-container">
+            <button type="submit">Lưu thay đổi</button>
+            <a th:href="@{/collection}" class="btn-cancel">Hủy</a>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>

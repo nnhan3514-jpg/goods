@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cài đặt tài khoản - Bộ sưu tập Goods</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-title {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        /* Khung chứa toàn bộ phần cài đặt */
+        .settings-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            width: 100%;
+            max-width: 550px;
+            overflow: hidden;
+        }
+
+        /* Thanh Tab ngang */
+        .tabs-header {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 18px 0;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: #4CAF50;
+            background: #f1f3f5;
+        }
+
+        /* Hiệu ứng active tab (giống mẫu bạn gửi) */
+        .tab-btn.active {
+            color: #e91e63; /* Màu hồng/đỏ nổi bật như mẫu hoặc đổi thành #4CAF50 nếu thích màu xanh */
+            background: white;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #e91e63;
+        }
+
+        /* Nội dung của từng Tab */
+        .tab-pane {
+            display: none;
+            padding: 35px 40px;
+        }
+
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group { margin-bottom: 20px; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        input[type="text"], input[type="password"], input[type="file"] {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            font-size: 15px;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #45a049; }
+
+        .avatar-preview { text-align: center; margin-bottom: 25px; }
+        .avatar-preview img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4CAF50;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .msg {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+            color: #27ae60;
+            background: #e8f8f5;
+            padding: 12px;
+            border-radius: 8px;
+            max-width: 550px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .back-link { text-align: center; margin-top: 30px; }
+        .back-link a { color: #4CAF50; text-decoration: none; font-weight: 600; font-size: 15px; }
+        .back-link a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<h2 class="page-title">Cài đặt tài khoản</h2>
+
+<div th:if="${param.success}" class="msg">✨ Cập nhật thành công!</div>
+
+<div class="settings-container">
+    <!-- THANH CHUYỂN TAB NGANG -->
+    <div class="tabs-header">
+        <button class="tab-btn active" onclick="switchTab(event, 'avatarTab')">ĐỔI ẢNH ĐẠI DIỆN</button>
+        <button class="tab-btn" onclick="switchTab(event, 'passwordTab')">ĐỔI MẬT KHẨU</button>
+    </div>
+
+    <!-- TAB 1: ĐỔI ẢNH ĐẠI DIỆN -->
+    <div id="avatarTab" class="tab-pane active">
+        <div class="avatar-preview">
+            <img th:src="${session.loggedInUser.avatar}" alt="Avatar hiện tại" />
+        </div>
+
+        <form th:action="@{/collection/update-avatar}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Cách 1: Tải ảnh từ máy tính</label>
+                <input type="file" name="avatarFile" accept="image/*" />
+            </div>
+            <div class="form-group" style="text-align: center; color: #adb5bd; font-size: 13px; margin: 15px 0;">— HOẶC —</div>
+            <div class="form-group">
+                <label>Cách 2: Dán đường dẫn Link ảnh (URL)</label>
+                <input type="text" name="avatarUrl" placeholder="https://example.com/image.jpg" />
+            </div>
+            <button type="submit">Lưu Ảnh Đại Diện</button>
+        </form>
+    </div>
+
+    <!-- TAB 2: ĐỔI MẬT KHẨU -->
+    <div id="passwordTab" class="tab-pane">
+        <form th:action="@{/collection/change-password}" method="post">
+            <div class="form-group">
+                <label>Mật khẩu cũ</label>
+                <input type="password" name="oldPassword" placeholder="Nhập mật khẩu hiện tại" required />
+            </div>
+            <div class="form-group" style="margin-top: 24px;">
+                <label>Mật khẩu mới</label>
+                <input type="password" name="newPassword" placeholder="Nhập mật khẩu mới" required />
+            </div>
+            <div style="margin-top: 45px;">
+                <button type="submit">Cập nhật mật khẩu</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="back-link">
+    <a th:href="@{/collection}">← Quay lại trang quản lý Goods</a>
+</div>
+
+<!-- SCRIPT ĐIỀU KHIỂN CHUYỂN TAB -->
+<script>
+    function switchTab(evt, tabId) {
+        // Ẩn tất cả các tab content
+        let panes = document.getElementsByClassName("tab-pane");
+        for (let i = 0; i < panes.length; i++) {
+            panes[i].classList.remove("active");
+        }
+
+        // Bỏ active tất cả các nút tab
+        let buttons = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove("active");
+        }
+
+        // Hiển thị tab được chọn và active nút tương ứng
+        document.getElementById(tabId).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+</script>
+
+</body>
+</html>

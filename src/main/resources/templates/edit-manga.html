@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chỉnh sửa thông tin Truyện</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 50px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h2 { color: #2c3e50; margin-top: 0; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #555; font-weight: 600; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .btn-container { display: flex; gap: 10px; margin-top: 25px; }
+        button { background-color: #3498db; color: white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; flex: 1; }
+        button:hover { background-color: #2980b9; }
+        .btn-back { background-color: #95a5a6; text-align: center; text-decoration: none; color: white; padding: 12px 20px; border-radius: 6px; font-weight: bold; flex: 1; display: inline-block; box-sizing: border-box; }
+        .btn-back:hover { background-color: #7f8c8d; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Chỉnh sửa thông tin Truyện / Sách</h2>
+    <form action="#" th:action="@{/collection/manga/update/{id}(id=${manga.id})}" th:object="${manga}" method="post">
+        <div class="form-group">
+            <label for="title">Tên truyện / Artbook:</label>
+            <input type="text" id="title" th:field="*{title}" required />
+        </div>
+        <div class="form-group">
+            <label for="author">Tác giả / Họa sĩ:</label>
+            <input type="text" id="author" th:field="*{author}" />
+        </div>
+        <div class="form-group">
+            <label for="imageUrl">Link ảnh bìa của truyện (URL):</label>
+            <input type="text" id="imageUrl" th:field="*{imageUrl}" />
+        </div>
+        <div class="form-group">
+            <label for="ownedVolumes">Số tập đang có:</label>
+            <input type="number" id="ownedVolumes" th:field="*{ownedVolumes}" min="0" required />
+        </div>
+        <div class="form-group">
+            <label for="totalVolumes">Tổng số tập (để 0 nếu chưa rõ):</label>
+            <input type="number" id="totalVolumes" th:field="*{totalVolumes}" min="0" />
+        </div>
+        <div class="form-group">
+            <label for="status">Trạng thái:</label>
+            <select id="status" th:field="*{status}">
+                <option value="Đang săn">Đang săn</option>
+                <option value="Đã hoàn thành">Đã hoàn thành</option>
+                <option value="Bản thường">Bản thường</option>
+                <option value="Bản đặc biệt">Bản đặc biệt</option>
+                <option value="Đang chờ tập mới">Đang chờ phát hành</option>
+            </select>
+        </div>
+        <div class="btn-container">
+            <button type="submit">💾 Lưu thay đổi</button>
+            <a th:href="@{/collection/manga}" class="btn-back">⬅ Quay lại</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
